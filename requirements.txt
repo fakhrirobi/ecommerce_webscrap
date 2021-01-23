@@ -27,7 +27,6 @@ Cython==0.29.21
 dill==0.3.3
 google_api_python_client==1.12.8
 greenlet==1.0.0
-grpc_reflection==1.0.0
 grpc_tools==1.0.0
 h5==0.0.1
 ipaddr==2.2.0
