@@ -1,4 +1,4 @@
-pandas==1.2.0
+pandas==1.1.5
 streamlit==0.74.1
 seaborn==0.11.1
 Pygments==2.3.1
