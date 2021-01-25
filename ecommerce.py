@@ -1,5 +1,4 @@
-import os 
-os.environ['KERAS_BACKEND'] = "plaidml.keras.backend"
+
 
 # import keras
 # import numpy as np 
@@ -9,8 +8,6 @@ os.environ['KERAS_BACKEND'] = "plaidml.keras.backend"
 import selenium 
 from selenium import webdriver
 
-
-PATH = '/usr/local/bin/chromedriver'
 
 
 import base64
@@ -24,7 +21,7 @@ from selenium.webdriver.common.keys import Keys
 import time
 from selenium.common.exceptions import NoSuchElementException,InvalidArgumentException,StaleElementReferenceException
 from time import sleep 
-import sqlite3
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -32,39 +29,45 @@ from selenium.webdriver.support import expected_conditions as EC
 import streamlit as st
 import numpy as np 
 import seaborn as sns
+from webdriver_manager.chrome import ChromeDriverManager
 pd.set_option('display.max_colwidth',None)
+
+
 
 @st.cache
 def query (product) : 
-    with Display():
-        options = webdriver.ChromeOptions()
-        prefs = {"profile.default_content_setting_values.notifications" : 2}
-        options.add_experimental_option("prefs",prefs)
-        driver = webdriver.Chrome(PATH,options=options)
-        driver.get(f"https://www.tokopedia.com/search?st=product&q={product}")
-        hasil_query = {}
-        other_info = []
-        try : 
-            items = WebDriverWait(driver, 10).until(
-                EC.visibility_of_all_elements_located((By.XPATH, '//div[@class="css-18c4yhp"]')))
-            
+    gChromeOptions = webdriver.ChromeOptions()
+    gChromeOptions.add_argument("window-size=1920x1480")
+    gChromeOptions.add_argument("disable-dev-shm-usage")
+    
 
-            price = WebDriverWait(driver, 10).until(
-                EC.visibility_of_all_elements_located((By.XPATH, '//div[@class="css-rhd610"]')))
-            harga = [x.text for x in price]
-            barang = [x.text for x in items]
-            item_data = zip(barang,harga)
-            # total_pages = driver.find_element_by_xpath('//*[@id="zeus-root"]/div/div[2]/div/div[2]/div[5]/div[2]/div/button[10]')
-            # query_result = driver.find_element_by_xpath('//*[@id="zeus-root"]/div/div[2]/div/div[2]/div[2]/div[1]')
-            hasil_query['barang'] = barang
-            hasil_query['harga'] = harga
-            # other_info.append(total_pages.text)
-            # other_info.append(query_result.text)
-        except (NoSuchElementException,StaleElementReferenceException) : 
-            print('gaada')
+    prefs = {"profile.default_content_setting_values.notifications" : 2}
+    gChromeOptions.add_experimental_option("prefs",prefs)
+    gDriver = webdriver.Chrome(chrome_options=gChromeOptions, executable_path=ChromeDriverManager().install())
+    gDriver.get(f"https://www.tokopedia.com/search?st=product&q={product}")
+    hasil_query = {}
+    other_info = []
+    try : 
+        items = WebDriverWait(gDriver, 10).until(
+            EC.visibility_of_all_elements_located((By.XPATH, '//div[@class="css-18c4yhp"]')))
+        
 
-        df = pd.DataFrame(hasil_query)
-        return df
+        price = WebDriverWait(gDriver, 10).until(
+            EC.visibility_of_all_elements_located((By.XPATH, '//div[@class="css-rhd610"]')))
+        harga = [x.text for x in price]
+        barang = [x.text for x in items]
+        item_data = zip(barang,harga)
+        # total_pages = driver.find_element_by_xpath('//*[@id="zeus-root"]/div/div[2]/div/div[2]/div[5]/div[2]/div/button[10]')
+        # query_result = driver.find_element_by_xpath('//*[@id="zeus-root"]/div/div[2]/div/div[2]/div[2]/div[1]')
+        hasil_query['barang'] = barang
+        hasil_query['harga'] = harga
+        # other_info.append(total_pages.text)
+        # other_info.append(query_result.text)
+    except (NoSuchElementException,StaleElementReferenceException) : 
+        print('gaada')
+
+    df = pd.DataFrame(hasil_query)
+    return df
 def download_file(dataframe,filename) : 
     excel = dataframe.to_csv()
     b64 = base64.b64encode(excel.encode()).decode()
