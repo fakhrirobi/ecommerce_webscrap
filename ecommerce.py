@@ -91,36 +91,37 @@ if __name__ == '__main__' :
     
     filename= st.sidebar.text_input('please input filename for download without extension')
     #button = st.sidebar.button('Click to download csv ')
-    data = query(y)
-    
+    if y : 
+        data = query(y)
 
-    ###########creating statistics from your search######################
-    #price range
-    st.title(r'We will show you the search result as soon as possible')
-    data_copy = data.copy(deep=True)
-    data_copy['harga'] = data_copy['harga'].str.replace('Rp','')
-    data_copy['harga'] = data_copy['harga'].str.replace('.','')
-    data_copy['harga'] = [float(x) for x in data_copy['harga'] ]
 
-    min_price  = data_copy['harga'].min()
-    min_price = f'{min_price:,}'
-    max_price = data_copy['harga'].max()
-    max_price = f'{max_price:,}'
-    avg_price = np.average(data_copy['harga'])
-    avg_price = f'{avg_price:,}'
+        ###########creating statistics from your search######################
+        #price range
+        st.title(r'We will show you the search result as soon as possible')
+        data_copy = data.copy(deep=True)
+        data_copy['harga'] = data_copy['harga'].str.replace('Rp','')
+        data_copy['harga'] = data_copy['harga'].str.replace('.','')
+        data_copy['harga'] = [float(x) for x in data_copy['harga'] ]
 
-    prog_bar = st.progress(0)
-    for percent in range(100) : 
-        time.sleep(0.00001)
-        prog_bar.progress(percent+1)
+        min_price  = data_copy['harga'].min()
+        min_price = f'{min_price:,}'
+        max_price = data_copy['harga'].max()
+        max_price = f'{max_price:,}'
+        avg_price = np.average(data_copy['harga'])
+        avg_price = f'{avg_price:,}'
 
-    st.text('The Result of your Search')
-    st.text('Minimum Price for %s %s' %(y.upper(),max_price))
-    st.text('minimum price %s %s' %(y.upper(),min_price))
-    st.text('average price %s %s' %(y.upper(),avg_price))
-    st.write(data)
-    st.text('Here Is the plot of your item')
-    fig = sns.displot(data_copy)
-    st.pyplot(fig)
+        prog_bar = st.progress(0)
+        for percent in range(100) : 
+            time.sleep(0.00001)
+            prog_bar.progress(percent+1)
 
-    download_file(data,filename)
+        st.text('The Result of your Search')
+        st.text('Minimum Price for %s %s' %(y.upper(),max_price))
+        st.text('minimum price %s %s' %(y.upper(),min_price))
+        st.text('average price %s %s' %(y.upper(),avg_price))
+        st.write(data)
+        st.text('Here Is the plot of your item')
+        fig = sns.displot(data_copy)
+        st.pyplot(fig)
+
+        download_file(data,filename)
