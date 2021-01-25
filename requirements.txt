@@ -1,7 +1,7 @@
-pandas==1.1.5
-numpy==1.19.5
-seaborn==0.11.1
-streamlit==0.74.1
 selenium==3.141.0
 PyVirtualDisplay==2.0
-xvfbwrapper==0.2.9
+numpy==1.19.5
+webdriver_manager==3.2.2
+streamlit==0.74.1
+pandas==1.2.0
+seaborn==0.11.1
