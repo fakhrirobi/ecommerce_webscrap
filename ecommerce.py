@@ -48,11 +48,11 @@ def query (product) :
     hasil_query = {}
     other_info = []
     try : 
-        items = WebDriverWait(gDriver, 10).until(
+        items = WebDriverWait(gDriver, 60).until(
             EC.visibility_of_all_elements_located((By.XPATH, '//div[@class="css-18c4yhp"]')))
         
 
-        price = WebDriverWait(gDriver, 10).until(
+        price = WebDriverWait(gDriver, 60).until(
             EC.visibility_of_all_elements_located((By.XPATH, '//div[@class="css-rhd610"]')))
         harga = [x.text for x in price]
         barang = [x.text for x in items]
